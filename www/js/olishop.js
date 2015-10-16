@@ -19,26 +19,51 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: serverip+"/cms/ajax/test",
+            url: serverip + "/cms/olishop_ajax/test",
             async: false
 
         }).done(function (msg) {
             //$('#jsonresult').text(msg[1].id_order);
             order_list = msg;
-            var html="";
+            var html = "";
             $.each(order_list, function (key, val) {
-                html+='<div class="order_row row">';
+                html += '<div class="order_row row">';
                 $.each(val, function (key, value) {
                     html += '<div class="o_' + key + '">' + value + '</div>';
                 });
-                 html+='</div>';
+                html += '</div>';
             });
-                     
+
             $('#order_list').append(html);
-            $('#order_list .order_row').each(function(){
-                $(this).append('<a href="'+serverip+'/cms/ajax/order_details/'+$(this).find('.o_order_id').text()+'" class="o_details"></a>');
+            $('#order_list .order_row').each(function () {
+                $(this).append('<span class="o_details" order="' + $(this).find('.o_order_id').text() + '"></a>');
             });
         });
+
+        $('.page2 .o_details').click(function () {
+            var id=$(this).attr('order');
+            $('.page2').fadeOut(function () {
+                $('.page3').fadeIn();
+            });
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: serverip + "/cms/olishop_ajax/test2/" + id,
+                async: false
+
+            }).done(function (msg2) {
+                order_list = msg2;
+                var html = '<div class="order_details_'+id+'">';
+                $.each(order_list, function (key, val) {
+                    html += '<div class="o_' + key + '">' + val + '</div>';
+                });
+                html += '</div>';
+                $('#order_detail').append(html);
+            });
+
+        });
+
 
 
 
